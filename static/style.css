@@ -1,28 +1,84 @@
+/* style.css */
+
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    background-color: #1E90FF;
+    color: white;
+    padding: 5vh 0;
+    margin: 0;
+}
+
+h3 {
+    color: #1E90FF;
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+ol {
+    margin: 0 40px;
+    text-align: justify;
+    padding-left: 20px;
     line-height: 1.6;
 }
 
-input, button {
-    padding: 8px;
-    font-size: 1rem;
-}
-
-.result {
-    margin-top: 10px;
-    color: green;
-}
-
-.scroll-section {
-    margin-top: 100vh;
+form {
     text-align: center;
+    margin: 30px 40px;
+    padding: 1%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.box {
-    width: 100px;
-    height: 100px;
-    background-color: coral;
-    margin: 20px auto;
-    transition: background-color 0.3s;
+input[type="button"] {
+    background-color: #1E90FF;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 10px 10px 0 0;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="button"]:hover:not(:disabled) {
+    background-color: #0d74d1;
+}
+
+input[type="button"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#obrazek {
+    text-align: center;
+    margin-top: 20px;
+    font-style: italic;
+    font-size: 18px;
+}
+
+#obrazek img {
+    max-width: 90%;
+    height: auto;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 3vh 0;
+    background-color: #1E90FF;
+    color: white;
+    font-size: 14px;
 }
