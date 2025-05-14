@@ -3,6 +3,7 @@ click==8.2.0
 Flask==3.1.1
 itsdangerous==2.2.0
 Jinja2==3.1.6
+kaleido==0.2.1
 MarkupSafe==3.0.2
 narwhals==1.39.0
 numpy==2.2.5

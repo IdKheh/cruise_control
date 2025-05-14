@@ -33,22 +33,22 @@ def page_not_found(e):
 
 @app.route('/<FUNCTION>')
 def execCommand(FUNCTION = None):
+    
     exec(FUNCTION.replace("<br>", "\n"))
     return ""
 
-def savePlot(number, time, PWM, D):
+def savePlot(number, time, PWM, D):    
     df = pd.DataFrame(dict(
         Time=time,
         Sygnal=PWM,
         Odleglosc=D
     ))
-
+    
     fig = px.line(df, x="Time", y=["Sygnal", "Odleglosc"],
                 title="Przebieg PWM oraz odleglosci w czasie",
-                labels={"Time": "Czas [s]", "value": "Przepływ [m³/s]", "variable": "Rodzaj przepływu"})
+                labels={"Time": "Czas [s]", "value": "Odległość [m]", "variable": "Legenda"})
 
-    fig.write_image("plot"+number+".png")
-    
+    fig.write_image("static/plot"+str(number)+".png")
     
 def start(number : int, kp : float, Ti: float, kd : float, d_zadane : float, Tp : int, t_sym : int):
     pid = PID(kp, Ti, kd, d_zadane, Tp, t_sym*60)
@@ -58,23 +58,23 @@ def start(number : int, kp : float, Ti: float, kd : float, d_zadane : float, Tp 
         # ser.write(str(pid.control(distanceSensor)).encode('utf-8')) #wysterować pojazd
         pid.sleep()
         
-    savePlot(number, pid.getTime, pid.getPWM, pid.getD)  #zapisać to jako wykres
+    savePlot(number, pid.getTime(), pid.getPWM(), pid.getD())  #zapisać to jako wykres
     return ""
 
 
 def deleteFile(number):
     for i in range(1,number+1):
-        os.remove('static/img'+str(i)+'.png')
+        os.remove('static/plot'+str(i)+'.png')
 
 
 def reset(number : int):
-    #deleteFile(number)
+    deleteFile(number)
     print("reset")
     return ''
 
 
 def poweroff(number : int):
-    #deleteFile(number)
+    deleteFile(number)
     #os.system('shutdown -h now')
     print("poweroff")
     return ''
