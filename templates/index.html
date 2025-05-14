@@ -10,79 +10,108 @@
 
     <h3>Uwagi</h3>
     <ol>
-        <li>Aby rozpocząć działanie programu należy wcisnąć przycisk Start. Wówczas pojazd zacznie jechać do przodu.</li>
-        <li>Pojazd jest wyposażony w czujnik odległości, co pozwala pojazdowmi wiedzieć w jakiej odległości znajduje się od ściany.</li>
-        <li>Pojazd testowany był na bieżni, a przed nim było położone płaski kartonik, który imitował ścianę.</li>
-        <li>Pojazd posiada zaimplementowany program tempomantu dlatego powinnien on jechać ze stałą prędkością niezależnie od warunków testowych.</li>
+        <li>Aby rozpocząć działanie programu, należy wcisnąć przycisk Start. Wówczas pojazd zacznie jechać do przodu.</li>
+        <li>Pojazd jest wyposażony w czujnik odległości, co pozwala mu określić, jak daleko znajduje się od przeszkody.</li>
+        <li>Pojazd testowano na bieżni, a przed nim położono płaski kartonik imitujący ścianę.</li>
+        <li>Dzięki zaimplementowanemu tempomatowi pojazd powinien poruszać się ze stałą prędkością niezależnie od warunków testowych.</li>
     </ol>
 
     <h3>Instrukcja obsługi</h3>
     <ol>
-        <li>Ustawić poniższe parametry.</li>
-        <li>Nacisnąć przycisk Start - pojazd zacznie jechać do przodu i zacznie się eksperyment.</li>
-        <li>Po określonym przez użytkownika czasie pojazd sam się zatrzyma.</li>
-        <li>Nacisnąć przycisk Wygeneruj wykres aby wygenerować przebieg regulatora jakim jest tempomat.</li>
+        <li>Ustaw parametry poniżej.</li>
+        <li>Naciśnij Start – pojazd ruszy, a eksperyment się rozpocznie.</li>
+        <li>Po określonym czasie pojazd zatrzyma się automatycznie.</li>
+        <li>Naciśnij Wygeneruj wykres, aby zobaczyć dane z eksperymentu.</li>
     </ol>
 
     <h3>Parametry</h3>
 
-    <form action = "/">
-        <input id = "start" type = "button" value="Start">
-        <input id = "wyswietlanie" type="button" value="Wygeneruj wykres"><br><br>
-        <input id = "reset" type = "button" value="Reset">
-        <input id = "poweroff" type = "button" value="Wyłącz">
-             
+    <form id="controlForm">
+        <label class="slider-label">nastawa regulatora kp: <span id="kpVal">{{ params.kp }}</span></label>
+        <input type="range" name="kp" min="0.5" max="1.5" step="0.1" value="{{ params.kp }}" oninput="kpVal.innerText = this.value"><br>
+
+        <label class="slider-label">nastawa regulatora Ti: <span id="TiVal">{{ params.Ti }}</span></label>
+        <input type="range" name="Ti" min="2.5" max="5" step="0.1" value="{{ params.Ti }}" oninput="TiVal.innerText = this.value"><br>
+
+        <label class="slider-label">nastawa regulatora kd: <span id="kdVal">{{ params.kd }}</span></label>
+        <input type="range" name="kd" min="0.5" max="1.5" step="0.1" value="{{ params.kd }}" oninput="kdVal.innerText = this.value"><br>
+
+        <label class="slider-label">Odległości jaką chcemy utrzymywać [m]: <span id="d_zadaneVal">{{ params.d_zadane }}</span></label>
+        <input type="range" name="d_zadane" min="0.01" max="1.01" step="0.1" value="{{ params.d_zadane }}" oninput="d_zadaneVal.innerText = this.value"><br>
+
+        <label class="slider-label">Okres próbkowania [s]: <span id="TpVal">{{ params.Tp }}</span></label>
+        <input type="range" name="Tp" min="1" max="46" step="5" value="{{ params.Tp }}" oninput="TpVal.innerText = this.value"><br>
+
+        <label class="slider-label">Czas symulacji [min]: <span id="t_symVal">{{ params.t_sym }}</span></label>
+        <input type="range" name="t_sym" min="1" max="31" step="2" value="{{ params.t_sym }}" oninput="t_symVal.innerText = this.value"><br><br>
+
+        <input id="start" type="button" value="Start">
+        <input id="wyswietlanie" type="button" value="Wygeneruj wykres">
+        <input id="reset" type="button" value="Reset">
+        <input id="poweroff" type="button" value="Wyłącz">
     </form>
-    <div style = "clear:both"></div>
-    <div id="obrazek" style = "display: none">Prosze czekac wyswietlam wykres</div>
 
+    <div style="clear:both;"></div>
+    <div id="obrazek" style="display: none;">Proszę czekać, wyświetlam wykres</div>
 
-    <footer>Wszelkie prawa zastrzeżone. <span style="color: #1E90FF;">&copy;</span> Autorzy 2025 </footer>
+    <footer>Wszelkie prawa zastrzeżone. <span style="color: #1E90FF;">&copy;</span> Autorzy 2025</footer>
 
     <script>
         let counter = 0;
         document.getElementById('wyswietlanie').disabled = true;
-        
-        function ExecPythonCommand(pythonCommand) {
+
+        function getParams() {
+            const form = document.getElementById('controlForm');
+            return {
+                kp: parseFloat(form.kp.value),
+                Ti: parseFloat(form.Ti.value),
+                kd: parseFloat(form.kd.value),
+                d_zadane: parseFloat(form.d_zadane.value),
+                Tp: parseInt(form.Tp.value),
+                t_sym: parseInt(form.t_sym.value)
+            };
+        }
+
+        function ExecPythonCommand(cmd) {
             let request = new XMLHttpRequest();
-            request.open("GET", "/" + pythonCommand, true);
+            request.open("GET", "/" + cmd, true);
             request.send();
         }
-        
-        
+
         function start() {
             counter++;
+            const p = getParams();
             document.getElementById('start').disabled = true;
             document.getElementById('reset').disabled = true;
             document.getElementById('poweroff').disabled = true;
             document.getElementById('wyswietlanie').disabled = true;
-            console.log("start "+ counter);
+
             setTimeout(() => {
                 document.getElementById('start').disabled = false;
                 document.getElementById('reset').disabled = false;
                 document.getElementById('poweroff').disabled = false;
                 document.getElementById('wyswietlanie').disabled = false;
-            }, 10000); // miliseconds
-            ExecPythonCommand("start("+counter+"," + 0.5 + "," + 0.5 + "," + 0.5 + "," + 0.5 +"," + 1 + "," + 10 + ")");
+            }, 10000);
+
+            ExecPythonCommand(`start(${counter},${p.kp},${p.Ti},${p.kd},${p.d_zadane},${p.Tp},${p.t_sym})`);
         }
-        function reset(){
+
+        function reset() {
             document.getElementById('obrazek').style.display = "none";
-            ExecPythonCommand("reset("+counter+")");
+            ExecPythonCommand(`reset(${counter})`);
         }
-        function poweroff(){
-            ExecPythonCommand("poweroff("+counter+")");
+
+        function poweroff() {
+            ExecPythonCommand(`poweroff(${counter})`);
         }
-        
 
         document.getElementById('start').addEventListener("click", start);
         document.getElementById('reset').addEventListener("click", reset);
         document.getElementById('poweroff').addEventListener("click", poweroff);
-        document.getElementById('wyswietlanie').addEventListener("click", function(){
-            console.log("rysuje zdjecie "+ counter)
-            document.getElementById('obrazek').innerHTML= "<img src=\"../static/img"+counter+".png\"/>";
+        document.getElementById('wyswietlanie').addEventListener("click", function () {
+            document.getElementById('obrazek').innerHTML = `<img src="/static/img${counter}.png"/>`;
             document.getElementById('obrazek').style.display = "block";
         });
     </script>
-
-    </body>
+</body>
 </html>

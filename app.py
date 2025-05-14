@@ -12,10 +12,18 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    params = {
+        'kp': 1.0,
+        'Ti': 2,
+        'kd': 0.6,
+        'd_zadane': 0.2,
+        'Tp': 5,
+        't_sym': 5
+    }
     # ser.write(str(0).encode('utf-8'))
     # ser.write(str(9).encode('utf-8'))
     
-    return render_template('index.html')
+    return render_template('index.html', params=params)
 
 
 @app.errorhandler(404)
@@ -43,7 +51,7 @@ def savePlot(number, time, PWM, D):
     
     
 def start(number : int, kp : float, Ti: float, kd : float, d_zadane : float, Tp : int, t_sym : int):
-    pid = PID(kp, Ti, kd, d_zadane, Tp, t_sym)
+    pid = PID(kp, Ti, kd, d_zadane, Tp, t_sym*60)
     
     for i in range(pid.getN()):
         distanceSensor = 5 #polaczyc z sensorem
