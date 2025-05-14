@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+input, button {
+    padding: 8px;
+    font-size: 1rem;
+}
+
+.result {
+    margin-top: 10px;
+    color: green;
+}
+
+.scroll-section {
+    margin-top: 100vh;
+    text-align: center;
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    background-color: coral;
+    margin: 20px auto;
+    transition: background-color 0.3s;
+}

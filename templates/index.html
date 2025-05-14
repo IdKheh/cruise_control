@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Tempomat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Tempomat</h1>
+
+    <h3>Uwagi</h3>
+    <ol>
+        <li>Aby rozpocząć działanie programu należy wcisnąć przycisk Start. Wówczas pojazd zacznie jechać do przodu.</li>
+        <li>Pojazd jest wyposażony w czujnik odległości, co pozwala pojazdowmi wiedzieć w jakiej odległości znajduje się od ściany.</li>
+        <li>Pojazd testowany był na bieżni, a przed nim było położone płaski kartonik, który imitował ścianę.</li>
+        <li>Pojazd posiada zaimplementowany program tempomantu dlatego powinnien on jechać ze stałą prędkością niezależnie od warunków testowych.</li>
+    </ol>
+
+    <h3>Instrukcja obsługi</h3>
+    <ol>
+        <li>Ustawić poniższe parametry.</li>
+        <li>Nacisnąć przycisk Start - pojazd zacznie jechać do przodu i zacznie się eksperyment.</li>
+        <li>Po określonym przez użytkownika czasie pojazd sam się zatrzyma.</li>
+        <li>Nacisnąć przycisk Wygeneruj wykres aby wygenerować przebieg regulatora jakim jest tempomat.</li>
+    </ol>
+
+    <h3>Parametry</h3>
+
+    <form action = "/">
+        <input id = "start" type = "button" value="Start">
+        <input id = "wyswietlanie" type="button" value="Wygeneruj wykres"><br><br>
+        <input id = "reset" type = "button" value="Reset">
+        <input id = "poweroff" type = "button" value="Wyłącz">
+             
+    </form>
+    <div style = "clear:both"></div>
+    <div id="obrazek" style = "display: none">Prosze czekac wyswietlam wykres</div>
+
+
+    <footer>Wszelkie prawa zastrzeżone. <span style="color: #1E90FF;">&copy;</span> Autorzy 2025 </footer>
+
+    <script>
+        let counter = 0;
+        document.getElementById('wyswietlanie').disabled = true;
+        
+        function ExecPythonCommand(pythonCommand) {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/" + pythonCommand, true);
+            request.send();
+        }
+        
+        
+        function start() {
+            counter++;
+            document.getElementById('start').disabled = true;
+            document.getElementById('reset').disabled = true;
+            document.getElementById('poweroff').disabled = true;
+            document.getElementById('wyswietlanie').disabled = true;
+            console.log("start "+ counter);
+            setTimeout(() => {
+                document.getElementById('start').disabled = false;
+                document.getElementById('reset').disabled = false;
+                document.getElementById('poweroff').disabled = false;
+                document.getElementById('wyswietlanie').disabled = false;
+            }, 10000); // miliseconds
+            ExecPythonCommand("start("+counter+"," + 0.5 + "," + 0.5 + "," + 0.5 + "," + 0.5 +"," + 1 + "," + 10 + ")");
+        }
+        function reset(){
+            document.getElementById('obrazek').style.display = "none";
+            ExecPythonCommand("reset("+counter+")");
+        }
+        function poweroff(){
+            ExecPythonCommand("poweroff("+counter+")");
+        }
+        
+
+        document.getElementById('start').addEventListener("click", start);
+        document.getElementById('reset').addEventListener("click", reset);
+        document.getElementById('poweroff').addEventListener("click", poweroff);
+        document.getElementById('wyswietlanie').addEventListener("click", function(){
+            console.log("rysuje zdjecie "+ counter)
+            document.getElementById('obrazek').innerHTML= "<img src=\"../static/img"+counter+".png\"/>";
+            document.getElementById('obrazek').style.display = "block";
+        });
+    </script>
+
+    </body>
+</html>
