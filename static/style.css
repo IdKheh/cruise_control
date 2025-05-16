@@ -137,3 +137,34 @@ input[type=range] {
     display: block;
     margin-bottom: 2px;
   }
+
+  .error-container {
+    text-align: center;
+    margin-top: 15vh;
+    padding: 20px;
+}
+
+.error-container h2 {
+    font-size: 3em;
+    color: #1E90FF;
+    margin-bottom: 10px;
+}
+
+.error-container p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.error-container a {
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.error-container a:hover {
+    background-color: #0d74d1;
+}

@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>404 - Not Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Tempomat - 404</title>
 </head>
 <body>
-    <h1>404 Page Not Found</h1>
-    <p>Strona nie istnieje</p>
-    <a href="/">Powrót do Strony głównej</a>
+    <div class="error-container">
+        <h2>404 Page Not Found</h2>
+        <p>Strona nie istnieje</p>
+        <a href="/">Powrót do Strony głównej</a>
+    </div>
 </body>
 </html>

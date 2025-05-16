@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 import plotly.express as px
 import pandas as pd
 import serial
@@ -33,6 +33,10 @@ def page_not_found(e):
 
 @app.route('/<FUNCTION>')
 def execCommand(FUNCTION = None):
+    fun = str(FUNCTION).lstrip('/').split('(')[0]
+    print(fun)
+    if fun not in ('start', 'reset', 'poweroff'):
+        abort(404)
     
     exec(FUNCTION.replace("<br>", "\n"))
     return ""
