@@ -25,6 +25,8 @@ class PID:
         
         
     def control(self, distanceSensor):
+        self.__t.append(self.__t[-1]+self.__Tp)
+        self.__d.append(distanceSensor)
         self.__e.append(self.__d_zadane-distanceSensor)
         self.__upi.append(self.__kp*(self.__e[-1]+(self.__Tp/self.__Ti)*sum(self.__e)+self.__kd*(self.__e[-1]-self.__e[-2])))
         self.__pwm.append(max(min(self.__upi[-1], self.__pwm_max), self.__pwm_min))
@@ -33,7 +35,6 @@ class PID:
     
     def sleep(self):
         time.sleep(self.__Tp)
-        
         
     def getTime(self):
         return self.__t

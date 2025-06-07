@@ -1,9 +1,8 @@
 from flask import Flask, render_template, abort
-import plotly.express as px
+import matplotlib.pyplot as plt
 import pandas as pd
 import serial
 import os
-import time
 from CuriseControl import *
 
 # ser = serial.Serial('/dev/ttyACM0',9600, timeout =1) #polaczenie ardiuno i raspberry
@@ -41,24 +40,35 @@ def execCommand(FUNCTION = None):
     exec(FUNCTION.replace("<br>", "\n"))
     return ""
 
-def savePlot(number, time, PWM, D):    
+def savePlot(number, time, PWM, D):  
+    
+    print( len (time), len(PWM), len(D))
     df = pd.DataFrame(dict(
         Time=time,
         Sygnal=PWM,
         Odleglosc=D
     ))
-    
-    fig = px.line(df, x="Time", y=["Sygnal", "Odleglosc"],
-                title="Przebieg PWM oraz odleglosci w czasie",
-                labels={"Time": "Czas [s]", "value": "Odległość [m]", "variable": "Legenda"})
 
-    fig.write_image("static/plot"+str(number)+".png")
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(df["Time"], df["Sygnal"], label="Sygnal", color='blue')
+    plt.plot(df["Time"], df["Odleglosc"], label="Odleglosc", color='orange')
+
+    plt.title("Przebieg PWM oraz odleglosci w czasie")
+    plt.xlabel("Czas [s]")
+    plt.ylabel("Odległość [m]")
+    plt.legend(title="Legenda")
+    plt.grid(True)
+
+    plt.savefig(f"static/plot{number}.png")
+    plt.close()
     
 def start(number : int, kp : float, Ti: float, kd : float, d_zadane : float, Tp : int, t_sym : int):
     pid = PID(kp, Ti, kd, d_zadane, Tp, t_sym*60)
     
     for i in range(pid.getN()):
-        distanceSensor = 5 #polaczyc z sensorem
+        distanceSensor = 0.05  #polaczyc z sensorem
+        # pid.control(distanceSensor);
         # ser.write(str(pid.control(distanceSensor)).encode('utf-8')) #wysterować pojazd
         pid.sleep()
         
