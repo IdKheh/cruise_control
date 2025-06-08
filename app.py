@@ -1,6 +1,5 @@
 from flask import Flask, render_template, abort
 import matplotlib.pyplot as plt
-import pandas as pd
 import serial
 import os
 from CuriseControl import *
@@ -40,19 +39,11 @@ def execCommand(FUNCTION = None):
     exec(FUNCTION.replace("<br>", "\n"))
     return ""
 
-def savePlot(number, time, PWM, D):  
-    
-    print( len (time), len(PWM), len(D))
-    df = pd.DataFrame(dict(
-        Time=time,
-        Sygnal=PWM,
-        Odleglosc=D
-    ))
-
-    
+def savePlot(number, time, PWM, D):    
+    PWM_scaled = [p / 100 for p in PWM]
     plt.figure(figsize=(10, 6))
-    plt.plot(df["Time"], df["Sygnal"], label="Sygnal", color='blue')
-    plt.plot(df["Time"], df["Odleglosc"], label="Odleglosc", color='orange')
+    plt.plot(time, PWM_scaled, label="Sygnal", color='blue')
+    plt.plot(time, D, label="Odleglosc", color='orange')
 
     plt.title("Przebieg PWM oraz odleglosci w czasie")
     plt.xlabel("Czas [s]")
@@ -68,7 +59,7 @@ def start(number : int, kp : float, Ti: float, kd : float, d_zadane : float, Tp 
     
     for i in range(pid.getN()):
         distanceSensor = 0.05  #polaczyc z sensorem
-        # pid.control(distanceSensor);
+        pid.control(distanceSensor)
         # ser.write(str(pid.control(distanceSensor)).encode('utf-8')) #wysterować pojazd
         pid.sleep()
         

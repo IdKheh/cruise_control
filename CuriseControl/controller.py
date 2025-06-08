@@ -28,8 +28,13 @@ class PID:
         self.__t.append(self.__t[-1]+self.__Tp)
         self.__d.append(distanceSensor)
         self.__e.append(self.__d_zadane-distanceSensor)
-        self.__upi.append(self.__kp*(self.__e[-1]+(self.__Tp/self.__Ti)*sum(self.__e)+self.__kd*(self.__e[-1]-self.__e[-2])))
-        self.__pwm.append(max(min(self.__upi[-1], self.__pwm_max), self.__pwm_min))
+        self.__upi.append(self.__kp*(self.__e[-1]+(1/self.__Ti)*sum(self.__e) + self.__kd*(self.__e[-1]-self.__e[-2])))
+        
+        self.__pwm.append(max(min((self.__pwm_max - self.__pwm_min) * self.__upi[-1], self.__pwm_max), self.__pwm_min))
+        
+        #self.__pwm.append(max(min(self.__upi[-1], self.__pwm_max), self.__pwm_min))
+        
+        print(self.__e[-1],self.__upi[-1], self.__pwm[-1] )
 
         return self.__pwm[-1]
     
